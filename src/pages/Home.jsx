@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 function Home() {
   const [pokemonList, setPokemonList] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     axios
@@ -19,6 +20,11 @@ function Home() {
       });
   }, []);
 
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/login");
+  };
+
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen bg-gray-100">
@@ -29,9 +35,17 @@ function Home() {
 
   return (
     <div className="p-6 bg-gray-100 min-h-screen">
-      <h2 className="text-4xl font-extrabold text-center text-gray-900 mb-8">
-        Pokemon List
-      </h2>
+      <div className="flex justify-between items-center mb-8">
+        <h2 className="text-4xl font-extrabold text-center text-gray-900">
+          Pokemon List
+        </h2>
+        <button
+          onClick={handleLogout}
+          className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition duration-300"
+        >
+          Logout
+        </button>
+      </div>
       <div className="max-w-7xl mx-auto grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-8">
         {pokemonList.map((pokemon, index) => (
           <div
