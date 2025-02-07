@@ -1,6 +1,8 @@
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import Home from "./pages/Home";
 import PokemonDetails from "./pages/PokemonDetails";
+import SignUp from "./pages/SignUp";
+import LogIn from "./pages/LogIn";
 
 function App() {
   return (
@@ -18,6 +20,8 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/pokemon/:name" element={<PokemonDetails />} />
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/login" element={<LogIn />} />
       </Routes>
     </Router>
   );
