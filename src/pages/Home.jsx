@@ -9,7 +9,7 @@ function Home() {
 
   useEffect(() => {
     axios
-      .get("https://pokeapi.co/api/v2/pokemon?limit=20")
+      .get("https://pokeapi.co/api/v2/pokemon?limit=100")
       .then((response) => {
         setPokemonList(response.data.results);
         setLoading(false);
@@ -19,11 +19,6 @@ function Home() {
         setLoading(false);
       });
   }, []);
-
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    navigate("/login");
-  };
 
   if (loading) {
     return (
@@ -39,12 +34,6 @@ function Home() {
         <h2 className="text-4xl font-extrabold text-center text-gray-900">
           Pokemon List
         </h2>
-        <button
-          onClick={handleLogout}
-          className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition duration-300"
-        >
-          Logout
-        </button>
       </div>
       <div className="max-w-7xl mx-auto grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-8">
         {pokemonList.map((pokemon, index) => (

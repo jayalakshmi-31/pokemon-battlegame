@@ -3,26 +3,20 @@ import Home from "./pages/Home";
 import PokemonDetails from "./pages/PokemonDetails";
 import SignUp from "./pages/SignUp";
 import LogIn from "./pages/LogIn";
+import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
 
 function App() {
   return (
     <Router>
-      <nav className="bg-blue-600 p-4 shadow-md">
-        <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <Link
-            to="/"
-            className="text-white text-2xl font-semibold hover:text-gray-200"
-          >
-            Home
-          </Link>
-        </div>
-      </nav>
+      <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/pokemon/:name" element={<PokemonDetails />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/login" element={<LogIn />} />
       </Routes>
+      <Footer />
     </Router>
   );
 }
