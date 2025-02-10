@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
-const LogIn = () => {
+const LogIn = ({ setUserImage }) => {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const navigate = useNavigate();
 
@@ -14,6 +14,7 @@ const LogIn = () => {
         formData
       );
       localStorage.setItem("token", response.data.token);
+      setUserImage(response.data.image);
       navigate("/");
     } catch (err) {
       console.error(err);
@@ -46,6 +47,13 @@ const LogIn = () => {
         <button type="submit" className="btn btn-primary w-full">
           Login
         </button>
+        <p className="mt-4 text-center">
+          Don't have an account?{" "}
+          <Link to="/signup" className="text-blue-800">
+            Sign up
+          </Link>{" "}
+          here!{" "}
+        </p>
       </form>
     </div>
   );

@@ -5,16 +5,21 @@ import SignUp from "./pages/SignUp";
 import LogIn from "./pages/LogIn";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
+import { useState } from "react";
 
 function App() {
+  const [userImage, setUserImage] = useState(null);
   return (
     <Router>
-      <Navbar />
+      <Navbar userImage={userImage} />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/pokemon/:name" element={<PokemonDetails />} />
-        <Route path="/signup" element={<SignUp />} />
-        <Route path="/login" element={<LogIn />} />
+        <Route
+          path="/signup"
+          element={<SignUp setUserImage={setUserImage} />}
+        />
+        <Route path="/login" element={<LogIn setUserImage={setUserImage} />} />
       </Routes>
       <Footer />
     </Router>

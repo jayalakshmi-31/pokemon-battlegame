@@ -1,23 +1,31 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
-const SignUp = () => {
+const SignUp = ({ setUserImage }) => {
   const [formData, setFormData] = useState({
     username: "",
     email: "",
     password: "",
+    image: null,
   });
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
       const response = await axios.post(
         "http://localhost:8080/users/register",
-        formData
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
       );
       localStorage.setItem("token", response.data.token);
+      setUserImage(response.data.image);
       navigate("/");
     } catch (err) {
       console.error(err);
@@ -100,12 +108,23 @@ const SignUp = () => {
           </div>
           <input
             type="file"
+            allowed="image/*"
             className="file-input file-input-bordered file-input-primary w-full max-w-s"
+            onChange={(e) =>
+              setFormData({ ...formData, image: e.target.files[0] })
+            }
           />
         </label>
         <button type="submit" className="btn btn-primary w-full">
           Sign Up
         </button>
+        <p className="mt-4 text-center">
+          Already have an account?{" "}
+          <Link to="/login" className="text-blue-800">
+            Sign in
+          </Link>{" "}
+          here!{" "}
+        </p>
       </form>
     </div>
   );

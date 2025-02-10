@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 
-function Navbar() {
+function Navbar({ userImage }) {
   const navigate = useNavigate();
   const location = useLocation();
   const token = localStorage.getItem("token");
+
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   const hideLoginButton =
     location.pathname === "/login" || location.pathname === "/signup";
@@ -29,10 +31,20 @@ function Navbar() {
               role="button"
               className="btn btn-ghost btn-circle avatar"
             >
-              <div className="w-10 rounded-full">
+              <div className="w-10 h-10 rounded-full relative">
+                {!imageLoaded && (
+                  <div className="skeleton w-10 h-10 rounded-full absolute bg-gray-300 animate-pulse"></div>
+                )}
                 <img
                   alt="User Avatar"
-                  src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+                  src={
+                    userImage ||
+                    "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+                  }
+                  className={`w-10 h-10 rounded-full ${
+                    !imageLoaded ? "hidden" : "block"
+                  }`}
+                  onLoad={() => setImageLoaded(true)}
                 />
               </div>
             </div>
