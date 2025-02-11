@@ -6,6 +6,8 @@ import LogIn from "./pages/LogIn";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import { useState } from "react";
+import MyRoster from "./pages/MyRoster";
+import Leaderboard from "./pages/Leaderboard";
 
 function App() {
   const [userImage, setUserImage] = useState(null);
@@ -20,6 +22,8 @@ function App() {
           element={<SignUp setUserImage={setUserImage} />}
         />
         <Route path="/login" element={<LogIn setUserImage={setUserImage} />} />
+        <Route path="/roster" element={<MyRoster />} />
+        <Route path="/leaderboard" element={<Leaderboard />} />
       </Routes>
       <Footer />
     </Router>
