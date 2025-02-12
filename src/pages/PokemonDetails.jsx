@@ -50,7 +50,7 @@ function PokemonDetails() {
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-gray-900"></div>
+        <span className="loading loading-spinner loading-lg text-info scale-150"></span>
       </div>
     );
   }
@@ -59,7 +59,7 @@ function PokemonDetails() {
     return <div className="text-center p-6">Pokemon not found!</div>;
 
   return (
-    <div className="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-md">
+    <div className="skeleton max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-md text-black">
       <h1 className="text-4xl font-extrabold text-center text-gray-800 mb-6 capitalize">
         {pokemon.name}
       </h1>
@@ -107,7 +107,7 @@ function PokemonDetails() {
           className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition duration-300 transform hover:scale-105"
           onClick={handleAddPokemon}
         >
-          Add Pokemon
+          Add Pokémon
         </button>
       </div>
     </div>
