@@ -25,6 +25,8 @@ const SignUp = ({ setUserImage, setUsername }) => {
         }
       );
       localStorage.setItem("token", response.data.token);
+      localStorage.setItem("username", JSON.stringify(response.data.username));
+      localStorage.setItem("image", JSON.stringify(response.data.image));
       setUserImage(response.data.image);
       setUsername(response.data.username);
       navigate("/");
