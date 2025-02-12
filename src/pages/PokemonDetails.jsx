@@ -27,7 +27,7 @@ function PokemonDetails() {
         alert("You must be logged in to add a Pokémon!");
         return;
       }
-   
+
       const response = await axios.post(
         `http://localhost:8080/users/roster/${name}`,
         {},
@@ -47,7 +47,6 @@ function PokemonDetails() {
     }
   };
 
-
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
@@ -61,7 +60,7 @@ function PokemonDetails() {
 
   return (
     <div className="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-md">
-      <h1 className="text-4xl font-extrabold text-center text-gray-800 mb-6">
+      <h1 className="text-4xl font-extrabold text-center text-gray-800 mb-6 capitalize">
         {pokemon.name}
       </h1>
       <div className="flex justify-center mb-6">
@@ -80,10 +79,33 @@ function PokemonDetails() {
           <span className="font-semibold">Abilities:</span>{" "}
           {pokemon.abilities.map((ability) => ability.ability.name).join(", ")}
         </p>
+        <p>
+          <span className="font-semibold">Base Experience:</span>{" "}
+          {pokemon.base_experience}
+        </p>
+        <p>
+          <span className="font-semibold">Height:</span> {pokemon.height / 10} m
+        </p>
+        <p>
+          <span className="font-semibold">Weight:</span> {pokemon.weight / 10}{" "}
+          kg
+        </p>
+      </div>
+      <div className="mb-4">
+        <h3 className="text-xl font-semibold text-gray-800">Base Stats</h3>
+        <ul className="text-gray-700">
+          {pokemon.stats.map((stat, index) => (
+            <li key={index} className="flex justify-between border-b py-2">
+              <span className="capitalize">{stat.stat.name}:</span>
+              <span>{stat.base_stat}</span>
+            </li>
+          ))}
+        </ul>
       </div>
       <div className="text-center">
-        <button className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition duration-300 transform hover:scale-105"
-        onClick={handleAddPokemon}
+        <button
+          className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition duration-300 transform hover:scale-105"
+          onClick={handleAddPokemon}
         >
           Add Pokemon
         </button>
