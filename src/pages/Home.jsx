@@ -25,10 +25,6 @@ function Home() {
       });
   }, []);
 
-  const addPokemon = (pokemon) => {
-    console.log(`${pokemon.name} added to roster!`);
-  };
-
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen bg-gray-100 text-black">
@@ -39,11 +35,7 @@ function Home() {
 
   return (
     <div className="p-6 bg-gray-100 min-h-screen text-black">
-      <div className="flex justify-between items-center mb-8">
-        <h2 className="text-4xl font-extrabold text-center text-gray-900">
-          Pokemon List
-        </h2>
-      </div>
+      <div className="flex justify-between items-center mb-8"></div>
       <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
         {pokemonList.map((pokemon, index) => (
           <div
@@ -61,12 +53,6 @@ function Home() {
             >
               {pokemon.name}
             </Link>
-            <button
-              onClick={() => addPokemon(pokemon)}
-              className="mt-2 px-4 py-2 bg-blue-400 text-black rounded-lg hover:bg-blue-700 transition"
-            >
-              Add Pokémon
-            </button>
           </div>
         ))}
       </div>
