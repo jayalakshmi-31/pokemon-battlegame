@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import { ToastContainer, toast } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
 
 function PokemonDetails() {
   const { name } = useParams();
@@ -39,11 +41,11 @@ function PokemonDetails() {
       );
 
       if (response.status === 200 || response.status === 201) {
-        alert("Pokémon added to your roster!");
+        toast.success("Pokémon added to your roster!");
       }
     } catch (error) {
       console.error("Error adding Pokémon:", error);
-      alert("Failed to add Pokémon to your roster.");
+      toast.error( "Pokemon already in your roster!");
     }
   };
 
@@ -59,7 +61,8 @@ function PokemonDetails() {
     return <div className="text-center p-6">Pokemon not found!</div>;
 
   return (
-    <div className="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-md text-black">
+    <div className="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-md text-black mb-32">
+      <ToastContainer position="top-right" autoClose={3000} />
       <h1 className="text-4xl font-extrabold text-center text-gray-800 mb-6 capitalize">
         {pokemon.name}
       </h1>
