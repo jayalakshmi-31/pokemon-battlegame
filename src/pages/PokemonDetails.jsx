@@ -20,6 +20,33 @@ function PokemonDetails() {
       });
   }, [name]);
 
+  const handleAddPokemon = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        alert("You must be logged in to add a Pokémon!");
+        return;
+      }
+
+      const response = await axios.post(
+        `http://localhost:8080/users/roster/${name}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.status === 200 || response.status === 201) {
+        alert("Pokémon added to your roster!");
+      }
+    } catch (error) {
+      console.error("Error adding Pokémon:", error);
+      alert("Failed to add Pokémon to your roster.");
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
@@ -76,8 +103,11 @@ function PokemonDetails() {
         </ul>
       </div>
       <div className="text-center">
-        <button className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition duration-300 transform hover:scale-105">
-          Add Pokémon
+        <button
+          className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition duration-300 transform hover:scale-105"
+          onClick={handleAddPokemon}
+        >
+          Add Pokemon
         </button>
       </div>
     </div>

@@ -1,31 +1,41 @@
-import { useEffect, useState } from "react";
 import axios from "axios";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
-const user = {
-  _id: "67aa1f236b48cfee55bd8160",
-  username: "Zappq",
-  email: "Zapp@gmail.com",
-  roster: [
-    "ditto",
-    "pikachu",
-    "charmander",
-    "bulbasaur",
-    "squirtle",
-    "jigglypuff",
-    "eevee",
-  ],
-  score: 10,
-  __v: 1,
-};
 
 function MyRoster() {
   const [pokemonList, setPokemonList] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState(null);
 
   const navigate = useNavigate();
 
   useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const token = localStorage.getItem("token");
+                if (!token) {
+          console.error("No token found in localStorage.");
+          return;
+        }
+
+        const response = await axios.get("http://localhost:8080/users/me", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        setUser(response.data);
+      } catch (error) {
+        console.error("Error fetching user:", error);
+      }
+    };
+
+    fetchUser();
+  }, []);
+
+  useEffect(() => {
+    if (!user) return;
+
     const fetchPokemonDetails = async () => {
       try {
         const pokemonData = await Promise.all(
@@ -63,7 +73,7 @@ function MyRoster() {
     };
 
     fetchPokemonDetails();
-  }, []);
+  }, [user]);
 
   if (loading) {
     return (
