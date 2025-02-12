@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 
-function Navbar({ userImage }) {
+function Navbar({ userImage, username }) {
   const navigate = useNavigate();
   const location = useLocation();
   const token = localStorage.getItem("token");
@@ -13,6 +13,8 @@ function Navbar({ userImage }) {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("username");
+    localStorage.removeItem("image");
     navigate("/login");
   };
 
@@ -23,8 +25,10 @@ function Navbar({ userImage }) {
           Pokemon Battle
         </Link>
       </div>
-      <div className="flex-none">
-        {token ? (
+      {token && (
+        <div className="flex-none flex items-center gap-4">
+          {username && <span className="text-lg font-medium">{username}</span>}
+
           <div className="dropdown dropdown-end">
             <div
               tabIndex={0}
@@ -53,7 +57,7 @@ function Navbar({ userImage }) {
               className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
             >
               <li>
-                <Link to="/roster">Roaster</Link>
+                <Link to="/roster">Roster</Link>
               </li>
               <li>
                 <Link to="/leaderboard">Leaderboard</Link>
@@ -65,17 +69,16 @@ function Navbar({ userImage }) {
               </li>
             </ul>
           </div>
-        ) : (
-          !hideLoginButton && (
-            <button
-              className="btn btn-primary text-slate-200"
-              onClick={() => navigate("/login")}
-            >
-              Login
-            </button>
-          )
-        )}
-      </div>
+        </div>
+      )}
+      {!token && !hideLoginButton && (
+        <button
+          className="btn btn-primary text-slate-200"
+          onClick={() => navigate("/login")}
+        >
+          Login
+        </button>
+      )}
     </div>
   );
 }

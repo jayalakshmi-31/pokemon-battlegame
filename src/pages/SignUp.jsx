@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 
-const SignUp = ({ setUserImage }) => {
+const SignUp = ({ setUserImage, setUsername }) => {
   const [formData, setFormData] = useState({
     username: "",
     email: "",
@@ -26,6 +26,7 @@ const SignUp = ({ setUserImage }) => {
       );
       localStorage.setItem("token", response.data.token);
       setUserImage(response.data.image);
+      setUsername(response.data.username);
       navigate("/");
     } catch (err) {
       console.error(err);

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 
-const LogIn = ({ setUserImage }) => {
+const LogIn = ({ setUserImage, setUsername }) => {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const navigate = useNavigate();
 
@@ -14,7 +14,10 @@ const LogIn = ({ setUserImage }) => {
         formData
       );
       localStorage.setItem("token", response.data.token);
+      localStorage.setItem("username", JSON.stringify(response.data.username));
+      localStorage.setItem("image", JSON.stringify(response.data.image));
       setUserImage(response.data.image);
+      setUsername(response.data.username);
       navigate("/");
     } catch (err) {
       console.error(err);
