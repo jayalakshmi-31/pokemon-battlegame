@@ -13,7 +13,7 @@ function MyRoster() {
     const fetchUser = async () => {
       try {
         const token = localStorage.getItem("token");
-                if (!token) {
+        if (!token) {
           console.error("No token found in localStorage.");
           return;
         }
@@ -84,14 +84,14 @@ function MyRoster() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6 flex flex-col items-center">
+    <div className="skeleton min-h-screen bg-gray-100 p-6 flex flex-col items-center">
       <h1 className="text-3xl font-bold mb-2">My Pokémons</h1>
       <h2 className="mb-6">my score {user.score}</h2>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-4xl">
         {pokemonList.map((pokemon) => (
           <div
             key={pokemon.id}
-            className="bg-white p-4 rounded-2xl shadow-md text-center"
+            className="card bg-base-100 shadow-xl cursor-pointer hover:shadow-2xl transition duration-300"
             onClick={() => navigate(`/pokemon/${pokemon.name}`)}
           >
             <img
@@ -99,15 +99,17 @@ function MyRoster() {
               alt={pokemon.name}
               className="w-32 h-32 mx-auto"
             />
-            <h2 className="text-xl font-semibold mt-2">
-              {pokemon.name.toUpperCase()}
-            </h2>
-            <p className="text-gray-600">Type: {pokemon.type}</p>
-            <p className="text-gray-600">Abilities: {pokemon.abilities}</p>
-            <div className="mt-3">
-              <p>❤️ HP: {pokemon.stats.hp}</p>
-              <p>⚔️ Attack: {pokemon.stats.attack}</p>
-              <p>🛡️ Defense: {pokemon.stats.defense}</p>
+            <div className="card-body items-center text-center">
+              <h2 className="card-title text-xl font-semibold">
+                {pokemon.name.toUpperCase()}
+              </h2>
+              <p className="text-gray-600">Type: {pokemon.type}</p>
+              <p className="text-gray-600">Abilities: {pokemon.abilities}</p>
+              <div className="mt-3">
+                <p>❤️ HP: {pokemon.stats.hp}</p>
+                <p>⚔️ Attack: {pokemon.stats.attack}</p>
+                <p>🛡️ Defense: {pokemon.stats.defense}</p>
+              </div>
             </div>
           </div>
         ))}
