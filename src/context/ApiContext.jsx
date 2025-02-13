@@ -108,6 +108,28 @@ export const ApiProvider = ({ children }) => {
     }
   };
 
+  const fetchComputerPokemon = async (count) => {
+    if (count === 0) return;
+    try {
+      const computerPokemonData = await Promise.all(
+        Array.from({ length: count }, async () => {
+          const randomId = Math.floor(Math.random() * 898) + 1;
+          const response = await axios.get(`https://pokeapi.co/api/v2/pokemon/${randomId}`);
+          return {
+            id: response.data.id,
+            name: response.data.name,
+            image: response.data.sprites.front_default,
+            attack: response.data.stats.find((s) => s.stat.name === "attack").base_stat,
+            defense: response.data.stats.find((s) => s.stat.name === "defense").base_stat,
+          };
+        })
+      );
+      return computerPokemonData;
+    } catch (error) {
+      console.error("Error fetching computer Pokémon:", error);
+    }
+  };
+
   // Remove a Pokémon from the user's roster
   const removePokemonFromRoster = async (pokemonName) => {
     try {
@@ -206,6 +228,7 @@ export const ApiProvider = ({ children }) => {
         removePokemonFromRoster,
         register,
         login,
+        fetchComputerPokemon
       }}
     >
       {children}
