@@ -35,7 +35,7 @@ function MyRoster() {
   }
 
   return (
-    <div className="skeleton bg-gray-100 p-6 flex flex-col items-center pb-44">
+    <div className="skeleton bg-gray-100 p-6 flex flex-col items-center pb-44 min-h-screen">
       <h1 className="text-3xl font-bold mb-2">My Pokémons</h1>
       <h2 className="mb-6">My Score: {user?.score}</h2>
       <button className="btn btn-primary mb-2 mb-4"
