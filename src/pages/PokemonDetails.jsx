@@ -1,52 +1,32 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import axios from "axios";
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useApi } from "../context/ApiContext";
 
 function PokemonDetails() {
   const { name } = useParams();
+  const { fetchPokemonDetails, fetchUser, addPokemonToRoster } = useApi();
   const [pokemon, setPokemon] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axios
-      .get(`https://pokeapi.co/api/v2/pokemon/${name}`)
-      .then((response) => {
-        setPokemon(response.data);
+    const getPokemonDetails = async () => {
+      try {
+        const data = await fetchPokemonDetails(name);
+        setPokemon(data);
         setLoading(false);
-      })
-      .catch((error) => {
+      } catch (error) {
         console.error(error);
         setLoading(false);
-      });
-  }, [name]);
+      }
+    };
+
+    getPokemonDetails();
+  }, [name, fetchPokemonDetails]);
 
   const handleAddPokemon = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        alert("You must be logged in to add a Pokémon!");
-        return;
-      }
-
-      const response = await axios.post(
-        `http://localhost:8080/users/roster/${name}`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      if (response.status === 200 || response.status === 201) {
-        toast.success("Pokémon added to your roster!");
-      }
-    } catch (error) {
-      console.error("Error adding Pokémon:", error);
-      toast.error( "Pokemon already in your roster!");
-    }
+    await addPokemonToRoster(name);
   };
 
   if (loading) {

@@ -1,107 +1,35 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useApi } from "../context/ApiContext"; // Import the useApi hook
 
 function MyRoster() {
-  const [pokemonList, setPokemonList] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState(null);
+  const {
+    user,
+    userPokemonList, // Destructure the Pokémon list for the user's roster
+    loading, // Destructure the loading state
+    fetchUser, // Destructure the fetchUser function
+    removePokemonFromRoster, // Destructure the removePokemonFromRoster function
+  } = useApi();
 
   const navigate = useNavigate();
 
+  // Fetch user data when the component mounts or when the roster changes
   useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        if (!token) {
-          console.error("No token found in localStorage.");
-          return;
-        }
-
-        const response = await axios.get("http://localhost:8080/users/me", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        setUser(response.data);
-      } catch (error) {
-        console.error("Error fetching user:", error);
-        toast.error("Failed to fetch user.");
-      }
-    };
-
     fetchUser();
-  }, [pokemonList]);
+  }, []);
 
-  useEffect(() => {
-    if (!user) return;
-
-    const fetchPokemonDetails = async () => {
-      try {
-        const pokemonData = await Promise.all(
-          user.roster.map(async (id) => {
-            const response = await axios.get(
-              `https://pokeapi.co/api/v2/pokemon/${id}`
-            );
-            return {
-              id: response.data.id,
-              name: response.data.name,
-              image: response.data.sprites.front_default,
-              type: response.data.types.map((t) => t.type.name).join(", "),
-              abilities: response.data.abilities
-                .map((a) => a.ability.name)
-                .join(", "),
-              stats: {
-                hp: response.data.stats.find((s) => s.stat.name === "hp")
-                  .base_stat,
-                attack: response.data.stats.find(
-                  (s) => s.stat.name === "attack"
-                ).base_stat,
-                defense: response.data.stats.find(
-                  (s) => s.stat.name === "defense"
-                ).base_stat,
-              },
-            };
-          })
-        );
-
-        setPokemonList(pokemonData);
-        setLoading(false);
-      } catch (error) {
-        console.error("Error fetching Pokémon:", error);
-        toast.error("Failed to fetch Pokémon details.");
-      }
-    };
-
-    fetchPokemonDetails();
-  }, [user]);
-
+  // Handle removing a Pokémon from the roster
   const handleRemovePokemon = async (pokemonName) => {
     try {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        toast.error("No token found!");
-        return;
-      }
-  
-      await axios.delete(`http://localhost:8080/users/roster/${pokemonName}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      setPokemonList((prevList) => prevList.filter((p) => p.name !== pokemonName));
-  
-      toast.success(`${pokemonName} removed successfully!`);
+      await removePokemonFromRoster(pokemonName); // Use the context function
     } catch (error) {
       console.error("Error removing Pokémon:", error);
-      toast.error("Failed to remove Pokémon.");
     }
   };
 
+  // Show loading spinner while data is being fetched
   if (loading) {
     return (
       <div className="flex items-center justify-center h-[70vh]">
@@ -114,41 +42,49 @@ function MyRoster() {
     <div className="skeleton bg-gray-100 p-6 flex flex-col items-center">
       <ToastContainer position="top-right" autoClose={3000} />
       <h1 className="text-3xl font-bold mb-2">My Pokémons</h1>
-      <h2 className="mb-6">my score {user.score}</h2>
+      <h2 className="mb-6">My Score: {user?.score}</h2>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-4xl mb-32">
-        {pokemonList.map((pokemon) => (
+        {userPokemonList.map((pokemon) => (
           <div
             key={pokemon.id}
             className="card bg-base-100 shadow-xl cursor-pointer hover:shadow-2xl transition duration-300 py-2"
-            
           >
-            
-            <div className="card-body py-2 items-center text-center"
-            onClick={() => navigate(`/pokemon/${pokemon.name}`)}
+            <div
+              className="card-body py-2 items-center text-center"
+              onClick={() => navigate(`/pokemon/${pokemon.name}`)}
             >
               <img
-              src={pokemon.image}
-              alt={pokemon.name}
-              className="w-32 h-32 mx-auto"
-            />
+                src={pokemon.sprites.front_default}
+                alt={pokemon.name}
+                className="w-32 h-32 mx-auto"
+              />
               <h2 className="card-title text-xl font-semibold">
                 {pokemon.name.toUpperCase()}
               </h2>
-              <p className="text-gray-600">Type: {pokemon.type}</p>
-              <p className="text-gray-600">Abilities: {pokemon.abilities}</p>
+              <p className="text-gray-600">
+                Type: {pokemon.types.map((type) => type.type.name).join(", ")}
+              </p>
+              <p className="text-gray-600">
+                Abilities:{" "}
+                {pokemon.abilities
+                  .map((ability) => ability.ability.name)
+                  .join(", ")}
+              </p>
               <div className="">
-                <p>❤️ HP: {pokemon.stats.hp}</p>
-                <p>⚔️ Attack: {pokemon.stats.attack}</p>
-                <p>🛡️ Defense: {pokemon.stats.defense}</p>
+                <p>❤️ HP: {pokemon.stats[0].base_stat || "N/A"}</p>
+                <p>⚔️ Attack: {pokemon.stats[1].base_stat || "N/A"}</p>
+                <p>🛡️ Defense: {pokemon.stats[2].base_stat || "N/A"}</p>
               </div>
-              
             </div>
-            <button 
-                className="btn btn-outline btn-error w-24 mx-auto mb-2"
-                onClick={() => handleRemovePokemon(pokemon.name)}
-                >
-                  Remove
-                </button>
+            <button
+              className="btn btn-outline btn-error w-24 mx-auto mb-2"
+              onClick={(e) => {
+                e.stopPropagation(); // Prevent navigation when clicking the button
+                handleRemovePokemon(pokemon.name);
+              }}
+            >
+              Remove
+            </button>
           </div>
         ))}
       </div>

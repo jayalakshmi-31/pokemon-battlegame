@@ -8,38 +8,25 @@ import Footer from "./components/Footer";
 import { useState } from "react";
 import MyRoster from "./pages/MyRoster";
 import Leaderboard from "./pages/Leaderboard";
+import { ApiProvider } from "./context/ApiContext";
 
 function App() {
-  const [userImage, setUserImage] = useState(
-    JSON.parse(localStorage.getItem("image")) || null
-  );
-  const [username, setUsername] = useState(
-    JSON.parse(localStorage.getItem("username")) || null
-  );
   return (
     <Router>
-      <div className="flex flex-col min-h-screen">
-        <Navbar userImage={userImage} username={username} />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/pokemon/:name" element={<PokemonDetails />} />
-          <Route
-            path="/signup"
-            element={
-              <SignUp setUserImage={setUserImage} setUsername={setUsername} />
-            }
-          />
-          <Route
-            path="/login"
-            element={
-              <LogIn setUserImage={setUserImage} setUsername={setUsername} />
-            }
-          />
-          <Route path="/roster" element={<MyRoster />} />
-          <Route path="/leaderboard" element={<Leaderboard />} />
-        </Routes>
-        <Footer />
-      </div>
+      <ApiProvider>
+        <div className="flex flex-col min-h-screen">
+          <Navbar />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/pokemon/:name" element={<PokemonDetails />} />
+            <Route path="/signup" element={<SignUp s />} />
+            <Route path="/login" element={<LogIn />} />
+            <Route path="/roster" element={<MyRoster />} />
+            <Route path="/leaderboard" element={<Leaderboard />} />
+          </Routes>
+          <Footer />
+        </div>
+      </ApiProvider>
     </Router>
   );
 }

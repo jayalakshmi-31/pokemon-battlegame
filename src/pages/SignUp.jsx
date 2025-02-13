@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
+import { useApi } from "../context/ApiContext";
 
-const SignUp = ({ setUserImage, setUsername }) => {
+const SignUp = () => {
+  const { register, setUser } = useApi();
   const [formData, setFormData] = useState({
     username: "",
     email: "",
@@ -14,21 +15,21 @@ const SignUp = ({ setUserImage, setUsername }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const formDataToSend = new FormData();
+    formDataToSend.append("username", formData.username);
+    formDataToSend.append("email", formData.email);
+    formDataToSend.append("password", formData.password);
+    if (formData.image) {
+      formDataToSend.append("image", formData.image);
+    }
+
     try {
-      const response = await axios.post(
-        "http://localhost:8080/users/register",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-      localStorage.setItem("token", response.data.token);
-      localStorage.setItem("username", JSON.stringify(response.data.username));
-      localStorage.setItem("image", JSON.stringify(response.data.image));
-      setUserImage(response.data.image);
-      setUsername(response.data.username);
+      const response = await register(formDataToSend);
+      setUser({
+        username: response.data.username,
+        email: response.data.email,
+        image: response.data.image,
+      });
       navigate("/");
     } catch (err) {
       console.error(err);
