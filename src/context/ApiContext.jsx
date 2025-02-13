@@ -64,17 +64,13 @@ export const ApiProvider = ({ children }) => {
 
   const fetchLeaders = async () => {
     try {
-
-      const response = await axios.get("http://localhost:8080/leaders", {
-        
-      });
+      const response = await axios.get("http://localhost:8080/leaders", {});
       setLeaders(response.data);
     } catch (error) {
       console.error("Error fetching leaders:", error);
       toast.error("Failed to fetch leaders.");
     }
   };
-
 
   // Fetch Pokémon details by name
   const fetchPokemonDetails = async (name) => {
@@ -91,15 +87,35 @@ export const ApiProvider = ({ children }) => {
 
   const updateScore = async () => {
     try {
-      await axios.post("http://localhost:8080/leaders", { score: 1 }, {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
-      });
+      await axios.post(
+        "http://localhost:8080/leaders",
+        { score: 1 },
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+      );
     } catch (error) {
       console.error("Error updating score:", error);
       toast.error("Failed to update score.");
     }
   };
 
+  const getScore = async () => {
+    try {
+      const response = await axios.post(
+        "http://localhost:8080/leaders/score",
+        {
+          username: localStorage.getItem("username"),
+        },
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   // Add a Pokémon to the user's roster
   const addPokemonToRoster = async (name) => {
@@ -142,13 +158,17 @@ export const ApiProvider = ({ children }) => {
       const computerPokemonData = await Promise.all(
         Array.from({ length: count }, async () => {
           const randomId = Math.floor(Math.random() * 898) + 1;
-          const response = await axios.get(`https://pokeapi.co/api/v2/pokemon/${randomId}`);
+          const response = await axios.get(
+            `https://pokeapi.co/api/v2/pokemon/${randomId}`
+          );
           return {
             id: response.data.id,
             name: response.data.name,
             image: response.data.sprites.front_default,
-            attack: response.data.stats.find((s) => s.stat.name === "attack").base_stat,
-            defense: response.data.stats.find((s) => s.stat.name === "defense").base_stat,
+            attack: response.data.stats.find((s) => s.stat.name === "attack")
+              .base_stat,
+            defense: response.data.stats.find((s) => s.stat.name === "defense")
+              .base_stat,
           };
         })
       );
@@ -159,8 +179,6 @@ export const ApiProvider = ({ children }) => {
       setLoading(false);
     }
   };
-
-  
 
   // Remove a Pokémon from the user's roster
   const removePokemonFromRoster = async (pokemonName) => {
@@ -264,7 +282,8 @@ export const ApiProvider = ({ children }) => {
         leaders,
         fetchLeaders,
         fetchComputerPokemon,
-        updateScore
+        updateScore,
+        getScore,
       }}
     >
       {children}

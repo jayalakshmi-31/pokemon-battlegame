@@ -1,7 +1,8 @@
-import { useEffect } from "react";
+import { use, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
-import { useApi } from "../context/ApiContext"; 
+import { useApi } from "../context/ApiContext";
+import { set } from "mongoose";
 
 function MyRoster() {
   const {
@@ -10,12 +11,21 @@ function MyRoster() {
     loading,
     fetchUser,
     removePokemonFromRoster,
+    getScore,
   } = useApi();
-
   const navigate = useNavigate();
+
+  const [score, setScore] = useState(null);
+  const displayScore = async () => {
+    const data = await getScore();
+    const score = data.leader.score;
+    console.log(score);
+    setScore(score);
+  };
 
   useEffect(() => {
     fetchUser();
+    displayScore();
   }, []);
 
   const handleRemovePokemon = async (pokemonName) => {
@@ -37,10 +47,13 @@ function MyRoster() {
   return (
     <div className="skeleton bg-gray-100 p-6 flex flex-col items-center pb-44 min-h-screen">
       <h1 className="text-3xl font-bold mb-2">My Pokémons</h1>
-      <h2 className="mb-6">My Score: {user?.score}</h2>
-      <button className="btn btn-primary mb-2 mb-4"
-      onClick={() => navigate("/battle")}
-      >Go to Battle</button>
+      <h2 className="mb-6">My Score: {score}</h2>
+      <button
+        className="btn btn-primary mb-4"
+        onClick={() => navigate("/battle")}
+      >
+        Go to Battle
+      </button>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-4xl">
         {userPokemonList.map((pokemon) => (
           <div
