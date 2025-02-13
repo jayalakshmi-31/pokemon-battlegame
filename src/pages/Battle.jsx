@@ -67,7 +67,7 @@ function BattlePage() {
   };
 
   useEffect(() => {
-    if (computerPokemon.length === 0) {
+    if (!computerPokemon || computerPokemon.length === 0) {
       const getComputerPokemon = async () => {
         const data = await fetchComputerPokemon(userPokemonList.length);
         setComputerPokemon(data);
@@ -93,7 +93,6 @@ function BattlePage() {
       </div>
     );
   }
-
   return (
     <div className="flex flex-col items-center p-6">
       <h1 className="text-3xl font-bold mb-4">Battle Arena</h1>
