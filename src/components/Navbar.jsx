@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useApi } from "../context/ApiContext";
 
-function Navbar({ userImage, username }) {
+function Navbar() {
   const navigate = useNavigate();
   const location = useLocation();
-  const token = localStorage.getItem("token");
+  const { user, setUser } = useApi();
 
   const [imageLoaded, setImageLoaded] = useState(false);
 
@@ -15,6 +16,7 @@ function Navbar({ userImage, username }) {
     localStorage.removeItem("token");
     localStorage.removeItem("username");
     localStorage.removeItem("image");
+    setUser(null); // Update user state
     navigate("/login");
   };
 
@@ -25,9 +27,11 @@ function Navbar({ userImage, username }) {
           Pokemon Battle
         </Link>
       </div>
-      {token && (
+      {user && (
         <div className="flex-none flex items-center gap-4">
-          {username && <span className="text-lg font-medium">{username}</span>}
+          {user.username && (
+            <span className="text-lg font-medium">{user.username}</span>
+          )}
 
           <div className="dropdown dropdown-end">
             <div
@@ -42,7 +46,7 @@ function Navbar({ userImage, username }) {
                 <img
                   alt="User Avatar"
                   src={
-                    userImage ||
+                    user.image ||
                     "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
                   }
                   className={`w-10 h-10 rounded-full ${
@@ -71,7 +75,7 @@ function Navbar({ userImage, username }) {
           </div>
         </div>
       )}
-      {!token && !hideLoginButton && (
+      {!user && !hideLoginButton && (
         <button
           className="btn btn-primary text-slate-200"
           onClick={() => navigate("/login")}

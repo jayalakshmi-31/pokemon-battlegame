@@ -1,26 +1,8 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { useApi } from "../context/ApiContext";
 
 function LeaderBoard() {
-  const [leaders, setLeaders] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    const fetchLeaders = async () => {
-      try {
-        const response = await axios.get("http://localhost:8080/leaders");
-        setLeaders(response.data);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchLeaders();
-  }, []);
+  const { leaders, loading, error } = useApi();
 
   if (loading) return <p className="text-center text-lg">Loading...</p>;
   if (error) return <p className="text-center text-red-500">{error}</p>;
@@ -38,16 +20,23 @@ function LeaderBoard() {
           </tr>
         </thead>
         <tbody>
-          {leaders.map((leader, index) => (
-            <tr key={leader._id} className="text-center">
-              <td className="border border-gray-400 px-6 py-4">{index + 1}</td>
-              <td className="border border-gray-400 px-6 py-4">{leader.username}</td>
-              <td className="border border-gray-400 px-6 py-4 font-semibold">{leader.score}</td>
-              <td className="border border-gray-400 px-6 py-4">
-                {new Date(leader.date).toLocaleDateString()}
-              </td>
-            </tr>
-          ))}
+          {leaders &&
+            leaders.map((leader, index) => (
+              <tr key={leader._id} className="text-center">
+                <td className="border border-gray-400 px-6 py-4">
+                  {index + 1}
+                </td>
+                <td className="border border-gray-400 px-6 py-4">
+                  {leader.username}
+                </td>
+                <td className="border border-gray-400 px-6 py-4 font-semibold">
+                  {leader.score}
+                </td>
+                <td className="border border-gray-400 px-6 py-4">
+                  {new Date(leader.date).toLocaleDateString()}
+                </td>
+              </tr>
+            ))}
         </tbody>
       </table>
     </div>
