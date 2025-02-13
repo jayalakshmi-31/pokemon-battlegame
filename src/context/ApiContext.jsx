@@ -137,6 +137,7 @@ export const ApiProvider = ({ children }) => {
 
   const fetchComputerPokemon = async (count) => {
     if (count === 0) return;
+    setLoading(true);
     try {
       const computerPokemonData = await Promise.all(
         Array.from({ length: count }, async () => {
@@ -154,6 +155,8 @@ export const ApiProvider = ({ children }) => {
       return computerPokemonData;
     } catch (error) {
       console.error("Error fetching computer Pokémon:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
