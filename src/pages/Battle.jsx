@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useApi } from "../context/ApiContext"; // Access the context
+import { useApi } from "../context/ApiContext"; 
 
 function BattlePage() {
   const [computerPokemon, setComputerPokemon] = useState([]);
@@ -7,7 +7,7 @@ function BattlePage() {
   const [winner, setWinner] = useState(null);
   const [battleStage, setBattleStage] = useState("setup");
 
-  const { userPokemonList, fetchUser, fetchComputerPokemon } = useApi(); // Get the function from context
+  const { userPokemonList, fetchUser, fetchComputerPokemon, updateScore } = useApi(); 
 
   useEffect(() => {
     fetchUser();
@@ -22,7 +22,7 @@ function BattlePage() {
     if (userPokemonList.length > 0) {
       getComputerPokemon();
     }
-  }, [userPokemonList, fetchComputerPokemon]); // Dependency added for fetchComputerPokemon
+  }, [userPokemonList, fetchComputerPokemon]); 
 
   const startBattle = () => {
     setBattleStage("battle");
@@ -33,8 +33,10 @@ function BattlePage() {
   
       userPokemonList.forEach((userPoke, index) => {
         const computerPoke = computerPokemon[index];
-        const userScore = userPoke.attack + userPoke.defense;
+        const userScore = userPoke.stats[1].base_stat + userPoke.stats[2].base_stat;
         const computerScore = computerPoke.attack + computerPoke.defense;
+        console.log("User score:", userScore);
+        console.log("Computer score:", computerScore);
   
         if (userScore > computerScore) {
           userWins++;
@@ -53,28 +55,18 @@ function BattlePage() {
       setBattleStage("result");
 
       if (battleWinner === "You win!") {
-        axios.post("http://localhost:8080/leaders", { score: 1 }, {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-        })
-        .then((response) => {
-          console.log("Score updated successfully:", response);
-        })
-        .catch((error) => {
-          console.error("Error adding score:", error);
-        });
+        updateScore();
       }
     }, 2000);
   };
 
   const resetGame = () => {
-    // Reset the battle state and computer Pokémon
     setBattleStage("setup");
-    setComputerPokemon([]); // Reset computer Pokémon when starting a new game
-    setBattleLog([]); // Optionally reset battle log
-    setWinner(null); // Optionally reset the winner
+    setComputerPokemon([]); 
+    setBattleLog([]); 
+    setWinner(null); 
   };
 
-  // Fetch computer Pokémon again when setting up the game
   useEffect(() => {
     if (battleStage === "setup" && userPokemonList.length > 0) {
       const getComputerPokemon = async () => {
