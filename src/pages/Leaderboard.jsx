@@ -1,7 +1,12 @@
 import { useApi } from "../context/ApiContext";
+import { useEffect } from "react";
 
 function LeaderBoard() {
-  const { leaders, loading, error } = useApi();
+  const { leaders, fetchLeaders, loading, error } = useApi();
+
+  useEffect(() => {
+    fetchLeaders();
+  }, []);
 
   if (loading) return <p className="text-center text-lg">Loading...</p>;
   if (error) return <p className="text-center text-red-500">{error}</p>;

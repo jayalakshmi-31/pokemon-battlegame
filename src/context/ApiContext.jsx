@@ -11,6 +11,7 @@ export const ApiProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [user, setUser] = useState(null);
+  const [leaders, setLeaders] = useState([]);
   const [formData, setFormData] = useState({ email: "", password: "" }); // Initialize formData
   const navigate = useNavigate();
 
@@ -61,6 +62,20 @@ export const ApiProvider = ({ children }) => {
     }
   };
 
+  const fetchLeaders = async () => {
+    try {
+
+      const response = await axios.get("http://localhost:8080/leaders", {
+        
+      });
+      setLeaders(response.data);
+    } catch (error) {
+      console.error("Error fetching leaders:", error);
+      toast.error("Failed to fetch leaders.");
+    }
+  };
+
+
   // Fetch Pokémon details by name
   const fetchPokemonDetails = async (name) => {
     try {
@@ -73,6 +88,18 @@ export const ApiProvider = ({ children }) => {
       throw error;
     }
   };
+
+  const updateScore = async () => {
+    try {
+      await axios.post("http://localhost:8080/leaders", { score: 1 }, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+      });
+    } catch (error) {
+      console.error("Error updating score:", error);
+      toast.error("Failed to update score.");
+    }
+  };
+
 
   // Add a Pokémon to the user's roster
   const addPokemonToRoster = async (name) => {
@@ -130,6 +157,8 @@ export const ApiProvider = ({ children }) => {
     }
   };
 
+  
+
   // Remove a Pokémon from the user's roster
   const removePokemonFromRoster = async (pokemonName) => {
     try {
@@ -173,6 +202,7 @@ export const ApiProvider = ({ children }) => {
           image: response.data.image,
         });
         toast.success("Registration successful!");
+        updateScore();
         navigate("/");
       } else {
         throw new Error("Invalid response from server");
@@ -228,7 +258,10 @@ export const ApiProvider = ({ children }) => {
         removePokemonFromRoster,
         register,
         login,
-        fetchComputerPokemon
+        leaders,
+        fetchLeaders,
+        fetchComputerPokemon,
+        updateScore
       }}
     >
       {children}
