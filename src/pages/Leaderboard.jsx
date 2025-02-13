@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { useApi } from "../context/ApiContext";
 
 function LeaderBoard() {

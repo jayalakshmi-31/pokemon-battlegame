@@ -13,7 +13,7 @@ function Home() {
   }
 
   return (
-    <div className="skeleton p-6 bg-gray-100 min-h-screen text-black">
+    <div className="skeleton p-6 bg-gray-100 min-h-screen text-black pb-40">
       <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
         {homepagePokemonList.map((pokemon, index) => (
           <div

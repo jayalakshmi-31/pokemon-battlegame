@@ -5,10 +5,10 @@ import SignUp from "./pages/SignUp";
 import LogIn from "./pages/LogIn";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
-import { useState } from "react";
 import MyRoster from "./pages/MyRoster";
 import Leaderboard from "./pages/Leaderboard";
 import { ApiProvider } from "./context/ApiContext";
+import Battle from "./pages/Battle";
 
 function App() {
   return (
@@ -23,6 +23,7 @@ function App() {
             <Route path="/login" element={<LogIn />} />
             <Route path="/roster" element={<MyRoster />} />
             <Route path="/leaderboard" element={<Leaderboard />} />
+            <Route path="/battle" element={< Battle />} />
           </Routes>
           <Footer />
         </div>
