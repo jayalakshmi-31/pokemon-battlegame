@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, use } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useApi } from "../context/ApiContext";
 
@@ -19,6 +19,15 @@ function Navbar() {
     setUser(null); // Update user state
     navigate("/login");
   };
+
+  useEffect(() => {
+    if (localStorage.getItem("token")) {
+      const token = localStorage.getItem("token");
+      const username = localStorage.getItem("username");
+      const image = localStorage.getItem("image");
+      setUser({ token, username, image });
+    }
+  }, []);
 
   return (
     <div className="navbar bg-base-100 px-16">
