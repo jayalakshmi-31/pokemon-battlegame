@@ -228,9 +228,11 @@ export const ApiProvider = ({ children }) => {
       } else {
         throw new Error("Invalid response from server");
       }
+      return response; // Add this line to return the response
     } catch (error) {
       console.error("Error registering user:", error);
       toast.error("Failed to register.");
+      throw error; // Add this line to rethrow the error
     }
   };
 

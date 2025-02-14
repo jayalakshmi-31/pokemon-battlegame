@@ -25,6 +25,7 @@ const SignUp = () => {
 
     try {
       const response = await register(formDataToSend);
+      console.log(response); // Add this line to log the response
       setUser({
         username: response.data.username,
         email: response.data.email,
